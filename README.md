@@ -26,6 +26,15 @@ The first run asks the user to create the local password. On first OCR capture, 
 
 The Next.js app remains in the repository as a separate web companion. It requires `APP_PASSWORD` and `AUTH_SECRET` under `.env.local` and can be deployed later, but it cannot embed the two marketplaces as interactive side-by-side panes because the marketplaces deny cross-origin framing.
 
-## Packaging later
+## Windows portable app
 
-Once the local workflow is proven, package the Electron app for macOS/Windows so it launches like a normal app instead of via `npm run desktop`.
+Every desktop change runs a GitHub Actions Windows build. Open **Actions** in this repository, select the newest **Build Windows desktop app** run, and download the `op-market-compare-windows-x64` artifact. Extract it and double-click `OP Market Compare Local.exe`; no Node.js installation is needed.
+
+To build it yourself from Windows after cloning the repository:
+
+```bash
+npm ci
+npm run desktop:package:win
+```
+
+The executable is placed in `dist/`.
