@@ -25,6 +25,15 @@ Tesseract OCR runs locally. On the first capture it may download/cache the Engli
 - Current EUR→USD rate can be refreshed through `open.er-api.com`; the rate remains editable.
 - It is designed for a desktop/laptop. A normal browser website cannot embed the two marketplace sites as interactive panes because both deny cross-origin framing.
 
-## Future packaging
+## Windows portable executable
 
-Once the workflow is proven, package it for macOS/Windows with Electron Forge. That makes it a normal app launch rather than an npm command.
+The repository's **Build Windows desktop app** GitHub Action produces a portable x64 `.exe` after each desktop change. Download its `op-market-compare-windows-x64` artifact, extract it, then double-click `OP Market Compare Local.exe`.
+
+To build it yourself on Windows:
+
+```bash
+npm ci
+npm run desktop:package:win
+```
+
+The portable executable is written to `dist/`. It does not require a separate Node.js installation once built.
