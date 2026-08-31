@@ -1,39 +1,31 @@
 # OP Market Compare
 
-Private mobile-first tool for comparing an exact One Piece card printing in Europe and North America.
+Local-first One Piece price-comparison workbench. Its primary product is the desktop app in [`desktop/`](desktop/README.md), not the hosted form.
 
-## What the first release does
+## What the desktop app does
 
-- Password-protected access using an HTTP-only signed session cookie.
-- Starts from a card number such as `ST15-005`.
-- Opens the correct TCGplayer and Cardmarket search pages in separate tabs.
-- Records Cardmarket **AVG7** and up to five TCGplayer **Latest Sales**, calculates the TCG average, converts EUR to USD, and shows the spread.
-- Keeps a small on-screen history chart for each lookup during the active session.
+- Stores a password hash locally on the computer.
+- Takes one to four card numbers; duplicate a number in multiple slots to compare different variants.
+- Opens real, interactive TCGplayer and Cardmarket pages side-by-side inside a local desktop workspace.
+- Lets the user choose the product and manually reveal the relevant price area.
+- Captures the visible local screen on demand, uses local OCR to read up to five TCGplayer Latest Sales or a Cardmarket AVG7 value, calculates the comparison, converts EUR to USD, and stores a local history.
+- Saves the visible price-chart captures alongside the comparison cards.
 
-## Why the two prices are entered manually for now
+There are no scheduled scans, stealth settings, headless browsers, or background crawling. This app captures only after the user presses a capture button with the desired marketplace content already visible.
 
-The exact comparison requested needs source-specific data:
-
-- Cardmarket AVG7 is available through its official seller API after Cardmarket grants API credentials.
-- TCGplayer makes API access available on request, but the normal public price API does not automatically guarantee the five individual latest-sale records needed for this project.
-
-The old local Playwright implementation is deliberately **not** deployed here: TCGplayer's Terms prohibit crawling/scraping, and Cardmarket blocks cloud-browser scraping. This manual bridge is reliable today; the front end is designed so official API adapters can replace the two entry fields once credentials and data scopes are approved.
-
-## Run locally
+## Run the desktop workbench
 
 ```bash
 npm install
-cp .env.example .env.local
-# Set APP_PASSWORD and AUTH_SECRET in .env.local
-npm run dev
+npm run desktop
 ```
 
-Generate `AUTH_SECRET` with `openssl rand -hex 32`.
+The first run asks the user to create the local password. On first OCR capture, the English OCR model is downloaded and cached locally.
 
-## Deploy
+## Optional web version
 
-Use Vercel's free Hobby plan for this private personal tool. Import this GitHub repository, add `APP_PASSWORD` and `AUTH_SECRET` under Project Settings → Environment Variables, then deploy. The app needs a server runtime for password protection; GitHub Pages is static-only and cannot keep a password or marketplace credentials secure.
+The Next.js app remains in the repository as a separate web companion. It requires `APP_PASSWORD` and `AUTH_SECRET` under `.env.local` and can be deployed later, but it cannot embed the two marketplaces as interactive side-by-side panes because the marketplaces deny cross-origin framing.
 
-## Next integration milestone
+## Packaging later
 
-Once Cardmarket and TCGplayer grant the required APIs, add server-only route handlers under `app/api/` and use the environment variables already reserved in `.env.example`. Never put marketplace credentials in `NEXT_PUBLIC_*` variables.
+Once the local workflow is proven, package the Electron app for macOS/Windows so it launches like a normal app instead of via `npm run desktop`.
